@@ -2,10 +2,11 @@ var express = require('express');
 var cors = require('cors');
 var app = express();
 var bodyParser = require('body-parser');
+const dotenv = require('dotenv');
 
 // const errorHandler = require("./helpers/error-handler");
 // app.use(errorHandler);
-
+dotenv.config();
 app.use(cors());
 
 app.use(bodyParser.json());
@@ -29,8 +30,7 @@ var server = app.listen(8081, function () {
 var mongoose = require('mongoose');
 
 //Set up default mongoose connection
-var mongoDB =
-	'mongodb+srv://dbManu:dbbyManu@cluster0.cja4v.mongodb.net/metarro?retryWrites=true&w=majority';
+var mongoDB = process.env.MONGOURI;
 mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true });
 
 //Get the default connection
