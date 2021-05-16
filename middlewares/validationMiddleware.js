@@ -1,10 +1,11 @@
 const { UNPROCESSABLE_ENTITY, BAD_REQUEST } = require('http-status');
 
-const errorFormatter = (req, errorList) =>
+const errorFormatter = (req, errorList) => {
 	errorList.map((error) => ({
 		message: 'error',
 		key: error.context.key,
 	}));
+};
 const validateSchema = (schema) => async (req, res, next) => {
 	try {
 		const payload = {
@@ -36,7 +37,8 @@ const validateSchema = (schema) => async (req, res, next) => {
 	} catch (error) {
 		return res.status(BAD_REQUEST).send({
 			code: BAD_REQUEST,
-			message: error,
+			message: error.message,
+			message: error.message.replace(' (value)', ''),
 		});
 	}
 };

@@ -2,7 +2,10 @@ var express = require('express');
 var cors = require('cors');
 var app = express();
 const dotenv = require('dotenv');
-const { errorHandler } = require('./middlewares/errorMiddleware');
+const {
+	errorConverter,
+	errorHandler,
+} = require('./middlewares/errorMiddleware');
 const routes = require('./routes');
 
 dotenv.config();
@@ -10,7 +13,8 @@ app.use(cors());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
+// convert error to ApplicationError, if needed
+app.use(errorConverter);
 app.use(errorHandler);
 
 app.use('/', routes);
