@@ -5,10 +5,10 @@ const signupUser = async (body) => {
 		email: body.email,
 		password: body.password,
 	});
-	user.set({
-		username: body.email,
-		password: body.password,
-	});
+	// user.set({
+	// 	username: body.email,
+	// 	password: body.password,
+	// });
 	user = await user.save();
 	return user;
 };
