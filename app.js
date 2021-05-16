@@ -1,23 +1,22 @@
 var express = require('express');
 var cors = require('cors');
 var app = express();
-var bodyParser = require('body-parser');
 const dotenv = require('dotenv');
+const { errorHandler } = require('./middlewares/errorMiddleware');
+const routes = require('./routes');
 
-// const errorHandler = require("./helpers/error-handler");
-// app.use(errorHandler);
 dotenv.config();
 app.use(cors());
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-// app.use(express.urlencoded({ extended: true }));
-// app.use(express.json());
+app.use(errorHandler);
 
-app.get('/', function (req, res) {
-	res.send('Hello World');
-});
+app.use('/', routes);
+// app.get('/', function (req, res) {
+// 	res.send('Hello World');
+// });
 
 var server = app.listen(8081, function () {
 	var host = server.address().address;
@@ -41,14 +40,14 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 /*
 var myobj = { email: "Company Inc", password: "Highway 37" };
-db.collection("userscollection").insertOne(myobj, function (err, res) {
+db.collection("mern-app").insertOne(myobj, function (err, res) {
   if (err) throw err;
   console.log("1 document inserted");
   db.close();
 });
 
 
-db.collection("userscollection").findOne(
+db.collection("mern-app").findOne(
   { email: "Company Inc" },
   function (err, res) {
     if (err) throw err;
@@ -61,7 +60,7 @@ db.collection("userscollection").findOne(
 
 // app.get("/api", async (req, res) => {
 //   const surveys = await db
-//     .collection("userscollection")
+//     .collection("mern-app")
 //     .findOne({ email: "Company Inc" });
 
 //   res.send(surveys);
@@ -71,7 +70,7 @@ db.collection("userscollection").findOne(
 //   console.log(req.body);
 //   const { email, password } = req.body;
 //   const surveys = await db
-//     .collection("userscollection")
+//     .collection("mern-app")
 //     .findOne({ email: email, password: password }, function (err, res2) {
 //       if (err) {
 //         res2.status(400).send({
@@ -87,7 +86,7 @@ app.post('/api', async (req, res) => {
 	console.log(req.body);
 	const { email, password } = req.body;
 	const surveys = await db
-		.collection('userscollection')
+		.collection('mern-app')
 		.findOne({ email: email, password: password });
 	if (surveys) {
 		res.send(surveys);
@@ -102,28 +101,30 @@ app.post('/api', async (req, res) => {
 app.post('/register', async (req, res) => {
 	console.log(req.body);
 	const { email, password } = req.body;
-
-	// var myobj = { email: "hgdhgd", password: "5454" };
-	db.collection('userscollection').insertOne(
-		{ email, password },
-		function (err, res) {
-			if (err) throw err;
+	db.collection('mern-app')
+		.insertOne({ email, password })
+		.then(() => {
 			console.log('1 document inserted');
-			if (res) var bool = 1;
 			db.close();
-		}
-	);
-	if (bool == 1) {
-		res.status(200).send({
-			success: true,
-			message: 'Registration Successful',
+			res.status(200).send({
+				success: true,
+				message: 'Registration Successful',
+				data: { email: email, password: password },
+			});
+		})
+		.catch((error) => {
+			res.status(200).send({
+				success: false,
+				message: 'Registration unSuccessful',
+			});
 		});
-	}
 });
 
 // var myobj = { email: "Company Inc", password: "Highway 37" };
-// db.collection("userscollection").insertOne(myobj, function (err, res) {
+// db.collection("mern-app").insertOne(myobj, function (err, res) {
 //   if (err) throw err;
 //   console.log("1 document inserted");
 //   db.close();
 // });
+
+module.exports = app;
