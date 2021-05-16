@@ -2,7 +2,7 @@ import { lazy } from 'react';
 
 // eslint-disable-next-line no-unused-vars
 const Login = lazy((_) => import('../pages/login'));
-// const Signup = lazy(_ => import('../pages/signup/signup'));
+const Signup = lazy((_) => import('../pages/signup/'));
 
 export default [
 	{
@@ -17,12 +17,12 @@ export default [
 		path: '/login',
 		component: Login,
 	},
-	// {
-	// 	exact: true,
-	// 	name: 'Signup',
-	// 	path: '/signup',
-	// 	component: Signup,
-	// },
+	{
+		exact: true,
+		name: 'Signup',
+		path: '/signup',
+		component: Signup,
+	},
 	// {
 	// 	exact: true,
 	// 	name: 'ForgotPassword',

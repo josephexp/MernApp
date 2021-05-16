@@ -29,6 +29,7 @@ const NavBar = () => {
 						About
 					</Nav.Link>
 					<Nav.Link href="#deets">Contact</Nav.Link>
+					<Nav.Link href="/">Login</Nav.Link>
 				</Nav>
 			</Navbar.Collapse>
 		</Navbar>
