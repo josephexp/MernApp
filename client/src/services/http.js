@@ -3,7 +3,7 @@ import { StorageKey } from '../helpers/constants';
 import { getCache, setCache } from './storage';
 import HandleError from './errorHandler';
 
-const API_URL = '';
+const API_URL = 'http://localhost:8081';
 const ACCESS_TOKEN_URL = 'accounts/refresh-token';
 
 const axiosConfig = {
@@ -15,13 +15,13 @@ const axiosConfig = {
 	},
 };
 
-const getToken = key => {
-	const tmsUser = getCache(StorageKey.TMS_USER);
-	let token = null;
-	if (tmsUser && tmsUser.data.data[key]) {
-		token = tmsUser.data.data[key];
-	}
-	return token;
+const getToken = (key) => {
+	// const tmsUser = getCache(StorageKey.TMS_USER);
+	// let token = null;
+	// if (tmsUser && tmsUser.data.data[key]) {
+	// 	token = tmsUser.data.data[key];
+	// }
+	// return token;
 };
 
 function getApiConfig({ headers = {}, appConfig = {} }) {
@@ -35,12 +35,13 @@ function getApiConfig({ headers = {}, appConfig = {} }) {
 	};
 
 	if (appConfig.baseURL === '') mainConfig.baseURL = appConfig.baseURL;
-	if (appConfig.doNotNeedAuthorizationHeader) delete mainConfig.headers.Authorization;
+	if (appConfig.doNotNeedAuthorizationHeader)
+		delete mainConfig.headers.Authorization;
 
 	return mainConfig;
 }
 
-const ApiCall = ajaxParams => Axios(ajaxParams);
+const ApiCall = (ajaxParams) => Axios(ajaxParams);
 
 // export function delay(time, value) {
 //   return new Promise(function (resolve) {
@@ -63,7 +64,13 @@ export const GET = ({ url = '', params = {}, headers = {} }) => {
 	return ApiCall(ajaxParams);
 };
 
-export const POST = ({ url = '', params = {}, data = {}, headers = {}, appConfig = {} }) => {
+export const POST = ({
+	url = '',
+	params = {},
+	data = {},
+	headers = {},
+	appConfig = {},
+}) => {
 	if (!url) throw new Error('Please specify a API URL');
 
 	const config = getApiConfig({ headers, appConfig });
@@ -79,7 +86,13 @@ export const POST = ({ url = '', params = {}, data = {}, headers = {}, appConfig
 	return ApiCall(ajaxParams);
 };
 
-export const PATCH = ({ url = '', params = {}, data = {}, headers = {}, appConfig = {} }) => {
+export const PATCH = ({
+	url = '',
+	params = {},
+	data = {},
+	headers = {},
+	appConfig = {},
+}) => {
 	if (!url) throw new Error('Please specify a API URL');
 
 	const config = getApiConfig({ headers, appConfig });
@@ -154,10 +167,10 @@ export const DELETE = ({ url = '', params = {}, data = {}, headers = {} }) => {
 function responseInterceptorFunction() {
 	// const dispatch = useDispatch();
 	Axios.interceptors.response.use(
-		function(response) {
+		function (response) {
 			return response;
 		},
-		function(error) {
+		function (error) {
 			try {
 				const {
 					config: originalRequest,
@@ -168,15 +181,18 @@ function responseInterceptorFunction() {
 					localStorage.clear();
 					window.location.href = '/';
 				}
-				if (!originalRequest.url.includes('accounts/signin') && status === 401) {
+				if (
+					!originalRequest.url.includes('accounts/signin') &&
+					status === 401
+				) {
 					return POST({
 						url: 'accounts/refresh-token',
 						data: { refreshToken: getToken('refreshToken') },
 					})
-						.then(response => {
-							const tmsUser = getCache(StorageKey.TMS_USER);
-							tmsUser.data.data.token = response.data.data.token;
-							setCache(StorageKey.TMS_USER, tmsUser);
+						.then((response) => {
+							// const tmsUser = getCache(StorageKey.TMS_USER);
+							// tmsUser.data.data.token = response.data.data.token;
+							// setCache(StorageKey.TMS_USER, tmsUser);
 							originalRequest.headers.Authorization = `Bearer ${response.data.data.token}`;
 							return Axios(originalRequest);
 						})

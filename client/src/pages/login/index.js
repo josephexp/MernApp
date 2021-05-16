@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import FormInput from '../../components/FormInput';
 import { Pattern } from '../../helpers/constants';
+import { GET, POST } from '../../services/http';
+import ToastMessage, { ToastStatus } from '../../services/toaster';
 
 const LoginForm = () => {
 	const [error, setError] = useState({
@@ -33,9 +35,30 @@ const LoginForm = () => {
 		return error.email || error.password ? false : true;
 	};
 
+	const loginUser = async () => {
+		const req = {
+			url: `/user/signup`,
+			data: data,
+		};
+		const response = await POST(req);
+		return response;
+	};
+
 	const handleSubmit = () => {
 		if (validate()) {
-			console.log('valid');
+			loginUser()
+				.then((response) => {
+					if (response.status === 204 || response.status === 200) {
+						ToastMessage(
+							'user',
+							ToastStatus.SUCCESS,
+							'User updated successfully'
+						);
+					}
+				})
+				.catch((error) => {
+					console.log('error', error);
+				});
 		} else {
 			console.log('invalid');
 		}

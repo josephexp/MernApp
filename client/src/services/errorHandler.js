@@ -1,9 +1,9 @@
 import ToastMessage from './toaster';
 import XMLParser from 'react-xml-parser';
 
-const HandleError = error => {
+const HandleError = (error) => {
 	// const dispatch = useDispatch();
-	const getFileSize = size => {
+	const getFileSize = (size) => {
 		if (size === 0) return '0 Bytes';
 		const k = 1024;
 		const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
@@ -14,11 +14,19 @@ const HandleError = error => {
 
 	switch (error.status) {
 		case 500:
-			ToastMessage('tms-error', 'error', error.data ? error.data.message : 'Internal server error');
+			ToastMessage(
+				'tms-error',
+				'error',
+				error.data ? error.data.message : 'Internal server error'
+			);
 			window.location.href = '/';
 			break;
 		case 422:
-			ToastMessage('tms-error', 'error', error.data ? error.data.error[0].message : error);
+			ToastMessage(
+				'tms-error',
+				'error',
+				error.data ? error.data.error[0].message : error
+			);
 			break;
 		case 400:
 			if (error?.data?.message) {
@@ -36,7 +44,11 @@ const HandleError = error => {
 			}
 			break;
 		case 409:
-			ToastMessage('tms-error', 'error', error.data ? error.data.message : error);
+			ToastMessage(
+				'tms-error',
+				'error',
+				error.data ? error.data.message : error
+			);
 			break;
 		default:
 			break;
