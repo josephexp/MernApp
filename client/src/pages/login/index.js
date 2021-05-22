@@ -21,6 +21,7 @@ const LoginForm = () => {
 	};
 
 	const validate = () => {
+		console.log(data);
 		if (data.email.toLowerCase().match(Pattern.EMAIL)) {
 			error.email = null;
 		} else {
@@ -37,7 +38,7 @@ const LoginForm = () => {
 
 	const loginUser = async () => {
 		const req = {
-			url: `/user/signup`,
+			url: `/user/login`,
 			data: data,
 		};
 		const response = await POST(req);
@@ -48,16 +49,14 @@ const LoginForm = () => {
 		if (validate()) {
 			loginUser()
 				.then((response) => {
+					console.log('1');
 					if (response.status === 204 || response.status === 200) {
-						ToastMessage(
-							'user',
-							ToastStatus.SUCCESS,
-							'User updated successfully'
-						);
+						ToastMessage('user', ToastStatus.SUCCESS, 'Login successful');
 					}
 				})
 				.catch((error) => {
-					console.log('error', error);
+					ToastMessage('user', ToastStatus.ERROR, 'Login Failed');
+					console.log('error', error.message);
 				});
 		} else {
 			console.log('invalid');
@@ -111,7 +110,7 @@ const LoginForm = () => {
 						handleSubmit();
 					}}
 				>
-					Submit
+					Login
 				</Button>
 				<div style={{ display: 'flex', justifyContent: 'space-between' }}>
 					<Button

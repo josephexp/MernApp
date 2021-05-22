@@ -3,8 +3,6 @@ class ApplicationError extends Error {
 		super(message);
 		this.statusCode = statusCode;
 		this.isOperational = isOperational;
-		console.log(statusCode, 'k');
-
 		if (stack) {
 			this.stack = stack;
 		} else {

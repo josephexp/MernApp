@@ -13,5 +13,10 @@ router.post(
 	validateSchema(userValidation.signup),
 	catchErrors(userController.signup)
 );
+router.post(
+	'/login',
+	validateSchema(userValidation.login),
+	catchErrors(userController.login)
+);
 
 module.exports = router;

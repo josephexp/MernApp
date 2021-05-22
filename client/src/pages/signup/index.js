@@ -63,7 +63,7 @@ const Signup = () => {
 						handleSubmit();
 					}}
 				>
-					Submit
+					Signup
 				</Button>
 			</Form>
 		</div>
